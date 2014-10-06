@@ -1,0 +1,107 @@
+# template for "Guess the number" mini-project
+# input will come from buttons and an input field
+# all output for the game will be printed in the console
+
+import simplegui
+import random
+import math
+
+ # initialize global variables used in your code here
+can_col_wrong = "Red"
+can_col_succ = "Green"
+canvas_width = 300
+canvas_height = 300
+comp_choice = 0
+range = 100
+counter = 0
+
+# helper function to start and restart the game
+def new_game():
+    if(range == 100):
+        print('New game. Range is from 0 to 100')
+        range100()
+    else:
+        print('New game. Range is from 0 to 1000')
+        range1000()
+        print'Number of guesses remaining - ',counter
+        
+ 
+
+# define event handlers for control panel
+def range100():
+    # button that changes the range to [0,100) and starts a new game 
+    global range
+    range = 100    
+    global counter
+    counter = 7
+    print'Number of guesses remaining - ',counter
+    global comp_choice
+    comp_choice = random.randrange(0,100)
+    print 'comp choice is ',comp_choice 
+    
+def range1000():
+    # button that changes the range to [0,1000) and starts a new game     
+    print ""
+    print('New game. Range is from 0 to 1000')
+    global range
+    range = 1000
+    global counter
+    counter = 10
+    print'Number of guesses remaining - ',counter
+    global comp_choice
+    comp_choice = random.randrange(0,1000)
+    #print 'comp choice is ',comp_choice
+
+def draw_wrong(canvas):
+    canvas.draw_text('Wrong Choice :(', (100, 100), 24, 'White')
+
+def draw_succ(canvas):
+    canvas.draw_text('Correct Guess!!', (100, 100), 24, 'White')
+
+
+    
+def input_guess(guess):
+    # main game logic goes here	
+    print ""
+    if 0 <= int(guess) <= range :
+        print "Guess was: ",guess
+        global counter
+        #print 'Comp_choice',comp_choice
+        if counter != 1:
+            if(comp_choice > int(guess)):
+                f.set_canvas_background(can_col_wrong)
+                f.set_draw_handler(draw_wrong)
+                print('Number is Higher')
+                counter -= 1
+                print 'Number of guesses remaining - ', counter
+            elif(comp_choice < int(guess)):
+                f.set_canvas_background(can_col_wrong)
+                f.set_draw_handler(draw_wrong)
+                print('Number is Lower')
+                counter -= 1
+                print 'Number of guesses remaining - ', counter
+            else:
+                f.set_canvas_background(can_col_succ)
+                f.set_draw_handler(draw_succ)
+                print "Good Job!! You guessed the right number -",comp_choice
+                new_game()
+        else:
+            print 'Sorry you used all your chances :( !!'
+            print ""
+            new_game()
+    else:
+        print 'You have entered a Value out of range. Please enter again'
+    
+    
+# create frame
+f = simplegui.create_frame("Guess the number?", canvas_width, canvas_height)
+f.add_button("Range 0-100", range100, 150)
+f.add_button("Range 0-1000", range1000, 150)
+f.add_input("Enter a number",input_guess, 150)
+
+# register event handlers for control elements and start frame
+f.start()
+
+# call new_game 
+new_game()
+
